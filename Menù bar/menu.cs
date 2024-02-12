@@ -4,60 +4,55 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Bar
 {
-    internal static class Menu
+
+    internal class Menu
     {
-        // Proprietà statica per il menu
-        private static List<SingleComponentMenu> _menu;
-
-        // Proprietà pubblica statica per accedere al menu
-        public static List<SingleComponentMenu> MenuList
+        // property
+        public List<SingleComponentMenu> _menu;
+        public double _orderTotal;
+        public Menu()
+            // questo costruttore è NECESSARIO per istanziare _menu ogni volta
         {
-            get { return _menu; }
-        }
-
-        static Menu()
-        {
-            InizializzaMenu();
-        }
-
-        private static void InizializzaMenu()
-        {
-            // Creazione della lista di SingleComponentMenu chiamata menu
             _menu = new List<SingleComponentMenu>();
-
-            // Aggiungo degli ingredienti alla lista
-            _menu.Add(new SingleComponentMenu("Coca Cola 150ml", 2.50, 1));
-            _menu.Add(new SingleComponentMenu("Insalata Di Pollo", 5.20, 2));
-            _menu.Add(new SingleComponentMenu("Pizza Margherita", 10.00, 3));
-            _menu.Add(new SingleComponentMenu("Pizza 4 Formaggi", 12.50, 4));
-            _menu.Add(new SingleComponentMenu("Patatine Fritte", 3.50, 5));
-            _menu.Add(new SingleComponentMenu("Insalata Di Riso", 8.00, 6));
-            _menu.Add(new SingleComponentMenu("Frutta Di Stagione", 5.00, 7));
-            _menu.Add(new SingleComponentMenu("Pizza Fritta", 5.00, 8));
-            _menu.Add(new SingleComponentMenu("Piadina Vegetariana", 6.00, 9));
-            _menu.Add(new SingleComponentMenu("Panino Hamburger", 7.90, 10));
         }
 
-        public static void MostraMenu()
+        public void addToMenu(SingleComponentMenu orderItem)
+        // Metodo per aggiungere un elemento al menu
+        // RICEVE direttamente un tipo SingleComponentMenu
+        // e lo aggiunge alla lista _menu
         {
+            this._menu.Add(orderItem);
+        }
+        public void addToMenu(string nome, double prezzo, int id)
+        // OVERLOADING del metodo per aggiungere un elemento al menu
+        // RICEVE i dati necessari per creare un SingleComponentMenu
+        // e lo aggiunge alla lista _menu
+        {
+            
+            this._menu.Add(new SingleComponentMenu(nome, prezzo, id));
+        }
+
+        public void MostraMenu()
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("============================================");
             Console.WriteLine("                   MENU                     ");
             Console.WriteLine("============================================");
-
-            // Ciclo For per stampare tutti gli ingredienti e relativo prezzo
+            Console.ResetColor();
+            // Ciclo For per stampare tutti gli item nella lista _menu
             foreach (var item in _menu)
             {
-                Console.WriteLine($"{item.Indice}) {item.Nome}: \u20AC {item.Prezzo}");
+                Console.WriteLine($"{item._id}) {item.Nome}: \u20AC {item.Prezzo}");
             }
             Console.WriteLine("\n");
         }
 
-        public static void RichiediScelta()
+        public void CreaOrdine()
         {
             string inputUtente;
             int scelta;
             Console.WriteLine("Ordina premendo il tasto corrispondente, quando sei pronto premi y:");
-            
+
             // istanzio un nuovo ordine
             Ordine newOrdine1 = new Ordine();
             do
@@ -67,17 +62,34 @@ namespace Bar
                 // Prova a convertire la stringa ricevuta come input in un intero per poter essere usata come indice
                 if (int.TryParse(inputUtente, out scelta))
                 {
-
-                    // il metodo addToOrder accetta un dato di tipo SingleComponentMenu
+                    // il metodo addToOrder accetta un dato di tipo SingleComponentMenu.
+                    // qui lo passa indicizzandolo dalla lista _menu
                     // e lo aggiunge all'ordine istanziato
-                    newOrdine1.addToOrder(_menu[scelta]);
+                    newOrdine1.addToOrder(_menu[scelta -1]);
 
-                    Console.WriteLine("Hai scelto: " + _menu[scelta].Nome);
+
+                    Console.WriteLine("L'ordine contiene: ");
+                    // qui mi stampa ogni item della lista _orderList
+                    foreach (var item in newOrdine1._orderList)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.WriteLine($"{item._id}) {item.Nome}: \u20AC {item.Prezzo}"); 
+                    }
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Totale Ordine: "+ newOrdine1._orderTotal);
+                    Console.ResetColor();
+
                     Console.WriteLine("\n");
                     Console.WriteLine("Continua ad ordinare altrimenti premi y per confermare");
                 }
 
             } while (inputUtente != "y");
+
+            newOrdine1.Saluta();
+
+            Console.WriteLine("\n");
+            MostraMenu();
+
         }
-    }
+    } 
 }

@@ -8,20 +8,39 @@ namespace Bar
 {
     internal class Ordine
     {
-        // Campo per memorizzare gli elementi dell'ordine
-        private List<SingleComponentMenu> _ordine;
+        // property
+        public List<SingleComponentMenu> _orderList;
+        public double _orderTotal;
 
-        // Costruttore
+        
         public Ordine()
+        // costruttore NECESSARIO per istanziare _orderList
         {
-            // Inizializza la lista dell'ordine nel costruttore
-            _ordine = new List<SingleComponentMenu>();
+            this._orderList = new List<SingleComponentMenu>();
         }
 
-        // Metodo per aggiungere un elemento all'ordine
+
         public void addToOrder(SingleComponentMenu orderItem)
+        // Metodo per aggiungere un elemento all'ordine
+        // RICEVE un tipo SingleComponentMenu
+        // e lo aggiunge alla lista _orderList
         {
-            _ordine.Add(orderItem);
+            this._orderList.Add(orderItem);
+            this._orderTotal += orderItem.Prezzo;
+        }
+
+        public void Saluta()
+        {
+            if (this._orderTotal > 0)
+            {
+                Console.WriteLine("Il totale del tuo ordine è: " +  this._orderTotal);
+                Console.WriteLine("Buona giornata!");
+            }
+            else
+            {
+                Console.WriteLine("Se cambi idea siamo a disposizione!");
+            }
+            
         }
     }
 }

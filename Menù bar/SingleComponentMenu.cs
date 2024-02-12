@@ -11,13 +11,13 @@ namespace Bar
       
             public string Nome { get; set; }
             public double Prezzo { get; set; }
-            public int Indice { get; set; }
+            public int _id { get; set; }
 
-        public SingleComponentMenu(string nome, double prezzo, int index)
+        public SingleComponentMenu(string nome, double prezzo, int id)
         {
             Nome = nome;
             Prezzo = prezzo;
-            Indice = index;
+            _id = id;
         }
     }
 }
